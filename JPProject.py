@@ -1,8 +1,14 @@
 import pygame
+import math
+
+screensize = (800,600)
 
 pygame.init()
+screen = pygame.display.set_mode(screensize)
+# Mouse Control
+clicking = False
+click_loc = [-1, -1]
 
-screen = pygame.display.set_mode((800,600))
 #Initial circle
 circle_x = 200
 circle_y = 300
@@ -12,27 +18,51 @@ square_x = 500
 square_y = 200
 side_length = 200
 running = True
+
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+
 while running:
+
+    mx, my = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        # Click Events
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            clicking = True
+            click_loc = [mx, my]
+
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            clicking = False
+            click_loc = [-1, -1]
+
+    if clicking and distance(mx, my, circle_x, circle_y) <= radius:
+        if mx >= radius and my >= radius and mx <= screensize[0] - radius and my <= screensize[1] - radius:
+            circle_x = mx
+            circle_y = my
 
     screen.fill((173,216,230))
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
     if event.type == pygame.KEYDOWN:
+        # X Circle Movement
         if event.key == pygame.K_RIGHT:
-            circle_x += 0.5
+            circle_x +=1
         if event.key == pygame.K_LEFT:
-            circle_x -= 0.5
+            circle_x -=1
+        # Y Circle Movement
         if event.key == pygame.K_UP:
-            circle_y -= 0.5
+            circle_y -=1
         if event.key == pygame.K_DOWN:
-            circle_y += 0.5
+            circle_y +=1
+        #
         if event.key == pygame.K_F1:
-            radius += 0.05
+            radius += 1
         if event.key == pygame.K_F2:
-            radius -= 0.05
+            radius -= 1
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
     if circle_x >= 800 - radius:
         circle_x = 800 - radius
@@ -70,7 +100,7 @@ while running:
         square_y = 0
 
     def total_area():
-        distance_formula = sqrt((circle_x-square_x)^2+(circle_x-square_x)^2)
+        distance_formula = math.sqrt((circle_x-square_x)**2+(circle_x-square_x)**2)
 
     pygame.draw.circle(screen, (0, 0, 0), (circle_x + radius, circle_y), 5)
     pygame.draw.circle(screen, (0, 0, 0), (circle_x - radius, circle_y), 5)
@@ -87,6 +117,4 @@ while running:
             pygame.Surface.lock(screen)
 
     pygame.display.update()
-
-
 
