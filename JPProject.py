@@ -47,22 +47,12 @@ while running:
     screen.fill((173,216,230))
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
-    if event.type == pygame.KEYDOWN:
-        # X Circle Movement
-        if event.key == pygame.K_RIGHT:
-            circle_x +=1
-        if event.key == pygame.K_LEFT:
-            circle_x -=1
-        # Y Circle Movement
-        if event.key == pygame.K_UP:
-            circle_y -=1
-        if event.key == pygame.K_DOWN:
-            circle_y +=1
-        #
+    
         if event.key == pygame.K_F1:
             radius += 1
         if event.key == pygame.K_F2:
             radius -= 1
+    
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
     if circle_x >= 800 - radius:
         circle_x = 800 - radius
@@ -74,20 +64,21 @@ while running:
         circle_y = radius
 
     #Square movement and size
+    
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_F6:
+        if event.key == pygame.K_RIGHT:
             square_x += 0.5
-        if event.key == pygame.K_F5:
+        if event.key == pygame.K_LEFT:
             square_x -= 0.5
-        if event.key == pygame.K_F7:
+        if event.key == pygame.K_UP:
             square_y -= 0.5
-        if event.key == pygame.K_F8:
+        if event.key == pygame.K_DOWN:
             square_y += 0.5
         if event.key == pygame.K_F3:
             side_length += 0.05
         if event.key == pygame.K_F4:
             side_length -= 0.05
-
+    
     pygame.draw.rect(screen, (0, 0, 100), (square_x, square_y, side_length, side_length))
 
     if square_x >= 800-side_length:
