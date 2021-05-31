@@ -104,8 +104,13 @@ while running:
             center of square inside
         elif distance_between_pointoncircle_centersquare >= 0:
             center of square outside
-        if the square is outside, use ration to create percentage, then subtract that percentage from the area of square-
+            
+        if the center of square is outside, use ratio to create percentage, then subtract that percentage from the area of square-
         - then add area of circle to get total area.
+        area of square = side_length^2 - (side_length^2 * ratio) 
+        final area = radius^2 * pi + area of square
+        
+        if the center of the square is inside, 
         
         """
 
