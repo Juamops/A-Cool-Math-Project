@@ -31,18 +31,26 @@ while running:
             running = False
 
         # Click Events
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            clicking = True
-            click_loc = [mx, my]
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                clicking = True
+                click_loc = [mx, my]
+            if event.button == 3:
+                right_clicking = True
 
-        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            clicking = False
-            click_loc = [-1, -1]
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                clicking = False
+                click_loc = [-1, -1]
+            if event.button == 3:
+                right_clicking = False
+
     # Circle movement
     if clicking and distance(mx, my, circle_x, circle_y) <= radius:
         if mx >= radius and my >= radius and mx <= screensize[0] - radius and my <= screensize[1] - radius:
             circle_x = mx
             circle_y = my
+
     # Square movement      
     if clicking and distance(mx, my, square_x, square_y) <= radius:
         if mx >= side_length and my >= side_length and mx <= screensize[0] - side_length and my <= screensize[1] - side_length:
@@ -53,10 +61,10 @@ while running:
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
     
-        if event.key == pygame.K_F1:
-            radius += 1
-        if event.key == pygame.K_F2:
-            radius -= 1
+    if event.key == pygame.K_F1:
+        radius += 1
+    if event.key == pygame.K_F2:
+        radius -= 1
     
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
     if circle_x >= 800 - radius:
