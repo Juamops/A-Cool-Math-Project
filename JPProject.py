@@ -7,7 +7,9 @@ pygame.init()
 screen = pygame.display.set_mode(screensize)
 # Mouse Control
 clicking = False
+right_clicking = False
 click_loc = [-1, -1]
+starting_size = 0
 
 #Initial circle
 circle_x = 200
@@ -21,6 +23,9 @@ running = True
 
 def distance(x1, y1, x2, y2):
     return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+
+def within (mx, my, x, y, width, height):
+    return (mx >= x and mx <= x + width and my >= y and my <= y + height)
 
 while running:
 
@@ -37,6 +42,7 @@ while running:
                 click_loc = [mx, my]
             if event.button == 3:
                 right_clicking = True
+                starting_size = side_length
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
@@ -45,26 +51,31 @@ while running:
             if event.button == 3:
                 right_clicking = False
 
-    # Circle movement
+    # Circle movement and Sizing
     if clicking and distance(mx, my, circle_x, circle_y) <= radius:
         if mx >= radius and my >= radius and mx <= screensize[0] - radius and my <= screensize[1] - radius:
             circle_x = mx
             circle_y = my
 
-    # Square movement      
-    if clicking and distance(mx, my, square_x, square_y) <= radius:
-        if mx >= side_length and my >= side_length and mx <= screensize[0] - side_length and my <= screensize[1] - side_length:
-            square_x = mx
-            square_y = my
+    if right_clicking and distance(mx, my, circle_x, circle_y) <= radius:
+        radius = round(distance(mx, my, circle_x, circle_y)) + 2
+
+    # Square movement and Sizing
+    if clicking and within(mx, my, square_x, square_y, side_length, side_length):
+        if mx >= side_length / 2 and my >= side_length / 2 and mx <= screensize[0] - side_length / 2 and my <= \
+                screensize[1] - side_length / 2:
+            square_x = round(mx - (side_length / 2))
+            square_y = round(my - (side_length / 2))
+
+"""
+Will Hopefully Work Soon!
+    if right_clicking and within(mx, my, square_x, square_y, side_length, side_length):
+        side_length = starting_size - (click_loc[1] - my)
+"""
 
     screen.fill((173,216,230))
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
-    
-    if event.key == pygame.K_F1:
-        radius += 1
-    if event.key == pygame.K_F2:
-        radius -= 1
     
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
     if circle_x >= 800 - radius:
@@ -92,8 +103,8 @@ while running:
         if event.key == pygame.K_F4:
             side_length -= 0.05
     """
-    pygame.draw.rect(screen, (0, 0, 100), (square_x, square_y, side_length, side_length))
 
+    pygame.draw.rect(screen, (0, 0, 100), (square_x, square_y, side_length, side_length))
     if square_x >= 800-side_length:
         square_x = 800-side_length
     if square_x <= side_length:
