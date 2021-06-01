@@ -67,11 +67,11 @@ while running:
             square_x = round(mx - (side_length / 2))
             square_y = round(my - (side_length / 2))
 
-"""
-Will Hopefully Work Soon!
+    """
+    Will Hopefully Work Soon!
     if right_clicking and within(mx, my, square_x, square_y, side_length, side_length):
         side_length = starting_size - (click_loc[1] - my)
-"""
+    """
 
     screen.fill((173,216,230))
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
