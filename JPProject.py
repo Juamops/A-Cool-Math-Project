@@ -17,6 +17,8 @@ radius = 100
 square_x = 500
 square_y = 200
 side_length = 200
+center_square_x = square_x + side_length/2
+center_square_y = square_y + side_length/2
 running = True
 
 def distance(x1, y1, x2, y2):
@@ -44,18 +46,19 @@ while running:
             circle_x = mx
             circle_y = my
     # Square movement      
-    if clicking and distance(mx, my, square_x, square_y) <= radius:
-        if mx >= side_length and my >= side_length and mx <= screensize[0] - side_length and my <= screensize[1] - side_length:
-            square_x = mx
-            square_y = my
+    if clicking and distance(mx, my, center_square_x, center_square_y) <= radius:
+        if mx >= side_length/2 and my >= side_length/2 and mx <= screensize[0] - side_length/2 and my <= screensize[1] - side_length/2:
+            center_square_x = mx
+            center_square_y = my
 
     screen.fill((173,216,230))
     pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
     
-        if event.key == pygame.K_F1:
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
             radius += 1
-        if event.key == pygame.K_F2:
+        if event.key == pygame.K_RIGHT:
             radius -= 1
     
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
@@ -69,32 +72,14 @@ while running:
         circle_y = radius
 
     #Square movement and size
-    """
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_RIGHT:
-            square_x += 0.5
-        if event.key == pygame.K_LEFT:
-            square_x -= 0.5
         if event.key == pygame.K_UP:
-            square_y -= 0.5
+            side_length += 1
         if event.key == pygame.K_DOWN:
-            square_y += 0.5
-        if event.key == pygame.K_F3:
-            side_length += 0.05
-        if event.key == pygame.K_F4:
-            side_length -= 0.05
-    """
-    pygame.draw.rect(screen, (0, 0, 100), (square_x, square_y, side_length, side_length))
+            side_length -= 1
 
-    if square_x >= 800-side_length:
-        square_x = 800-side_length
-    if square_x <= side_length:
-        square_x = side_length
-    if square_y >= 600-side_length:
-        square_y = 600-side_length
-    if square_y <= 0:
-        square_y = 0
-
+    pygame.draw.rect(screen, (0, 0, 100), (center_square_x-side_length/2, center_square_y-side_length/2, side_length, side_length))
+    
     def total_area():
         distance_between_centers = math.sqrt((circle_x-square_x)**2+(circle_x-square_x)**2)
         """
@@ -118,10 +103,10 @@ while running:
     pygame.draw.circle(screen, (0, 0, 0), (circle_x - radius, circle_y), 5)
     pygame.draw.circle(screen, (0, 0, 0), (circle_x, circle_y + radius), 5)
     pygame.draw.circle(screen, (0, 0, 0), (circle_x, circle_y - radius), 5)
-    pygame.draw.circle(screen, (0, 0, 0), (square_x, square_y), 5)
-    pygame.draw.circle(screen, (0, 0, 0), (square_x + side_length, square_y), 5)
-    pygame.draw.circle(screen, (0, 0, 0), (square_x, square_y + side_length), 5)
-    pygame.draw.circle(screen, (0, 0, 0), (square_x + side_length, square_y  + side_length), 5)
+    pygame.draw.circle(screen, (0, 0, 0), (center_square_x-side_length/2, center_square_y-side_length/2), 5)
+    pygame.draw.circle(screen, (0, 0, 0), (center_square_x+side_length/2, center_square_y-side_length/2), 5)
+    pygame.draw.circle(screen, (0, 0, 0), (center_square_x-side_length/2, center_square_y+side_length/2), 5)
+    pygame.draw.circle(screen, (0, 0, 0), (center_square_x+side_length/2, center_square_y+side_length/2), 5)
 
 
     if event.type == pygame.KEYDOWN:
