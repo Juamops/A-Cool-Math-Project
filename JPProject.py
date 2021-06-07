@@ -22,13 +22,13 @@ side_length = 200
 center_square_x = square_x + side_length/2
 center_square_y = square_y + side_length/2
 running = True
-"""
+
 def distance(x1, y1, x2, y2):
     return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
 def within (mx, my, x, y, width, height):
     return (mx >= x and mx <= x + width and my >= y and my <= y + height)
-"""
+
 while running:
 
     mx, my = pygame.mouse.get_pos()
@@ -65,7 +65,7 @@ while running:
             center_square_x = mx
             center_square_y = my
 
-    """
+
     if right_clicking and distance(mx, my, circle_x, circle_y) <= radius:
         radius = round(distance(mx, my, circle_x, circle_y)) + 2
     
@@ -76,7 +76,7 @@ while running:
             square_x = round(mx - (side_length / 2))
             square_y = round(my - (side_length / 2))
 
-    
+    """
     Will Hopefully Work Soon!
     if right_clicking and within(mx, my, square_x, square_y, side_length, side_length):
         side_length = starting_size - (click_loc[1] - my)
