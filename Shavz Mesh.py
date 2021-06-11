@@ -23,8 +23,7 @@ side_length = 200
 center_square_x = square_x + side_length / 2
 center_square_y = square_y + side_length / 2
 # Triangle and hexagon side length
-triangle_side_length = 15
-hexagonal_side_length = 15
+triangle_side_length = 10
 # Button for area
 circle_2_x = 60
 circle_2_y = 60
@@ -95,7 +94,6 @@ while running:
     """
 
     screen.fill((173, 216, 230))
-    #pygame.draw.rect(screen, (0, 0, 0), (0, 0, 800, 600), 5)
     # Circle movement and size
 
     if event.type == pygame.KEYDOWN:
@@ -177,8 +175,9 @@ while running:
                 else:
                     pygame.draw.circle(screen, (173, 216, 230), (x, y), 1)
                 x += triangle_side_length
-            x = 0 + triangle_side_length / 2
-            y += triangle_side_length/(2**0.5)
+            x = 0 + (triangle_side_length / 2)
+            y += (triangle_side_length/2)*(3**0.5)
+            #print(((((triangle_side_length/2)*(3**0.5))**2)+((triangle_side_length / 2)**2))**0.5)
             while x <= 800:
                 pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
                 if distance(x,y,circle_x,circle_y) <= radius or distance(x,y,circle_x,circle_y) == radius:
@@ -191,7 +190,7 @@ while running:
                     pygame.draw.circle(screen, (173, 216, 230), (x, y), 1)
                 x += triangle_side_length
             x = 0
-            y += triangle_side_length/(2**0.5)
+            y += (triangle_side_length/2)*(3**0.5)
             while x <= 800:
                 pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
                 if distance(x,y,circle_x,circle_y) <= radius or distance(x,y,circle_x,circle_y) == radius:
@@ -204,58 +203,16 @@ while running:
                     pygame.draw.circle(screen, (173, 216, 230), (x, y), 1)
                 x += triangle_side_length
 
+        edges = 0
         for point in point_coordinate:
             for target in point_coordinate:
-                print((point,target))
-                if distance(point[0], point[1], target[0], target[1]) == side_length:
-
-                    print('yes')
+                if distance(point[0], point[1], target[0], target[1]) <= triangle_side_length + 1:
                     pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
+                    edges += 1
 
-        #print(points)
-        #print(point_coordinate)
+        
 
-    # Still working on hexagonal grid
-    def hexagonal_grid():
-        hexagonal_x = 0
-        hexagonal_y = 115
-
-        hexagonal_points = 0
-        while hexagonal_y <= 600:
-            while hexagonal_x <= 800:
-                pygame.draw.circle(screen, (255, 255, 255), (hexagonal_x, hexagonal_y), 1)
-                if distance(hexagonal_x,hexagonal_y,circle_x,circle_y) <= radius or distance(hexagonal_x,hexagonal_y,circle_x,circle_y) == radius:
-                    hexagonal_points += 1
-                elif check_point(hexagonal_x,hexagonal_y) == 2:
-                    hexagonal_points += 1
-                else:
-                    pygame.draw.circle(screen, (173, 216, 230), (hexagonal_x, hexagonal_y), 1)
-                hexagonal_x += hexagonal_side_length
-            hexagonal_x = 0 + triangle_side_length / 2
-            hexagonal_y += triangle_side_length/(2**0.5)
-            while hexagonal_x <= 800:
-                pygame.draw.circle(screen, (255, 255, 255), (hexagonal_x, hexagonal_y), 1)
-                if distance(hexagonal_x,hexagonal_y,circle_x,circle_y) <= radius or distance(hexagonal_x,hexagonal_y,circle_x,circle_y) == radius:
-                    hexagonal_points += 1
-                elif check_point(hexagonal_x, hexagonal_y) == 2:
-                    hexagonal_points += 1
-                else:
-                    pygame.draw.circle(screen, (173, 216, 230), (hexagonal_x, hexagonal_y), 1)
-                hexagonal_x += hexagonal_side_length*2
-            hexagonal_x = 0
-            hexagonal_y += triangle_side_length/(2**0.5)
-            while hexagonal_x <= 800:
-                pygame.draw.circle(screen, (255, 255, 255), (hexagonal_x, hexagonal_y), 1)
-                if distance(hexagonal_x,hexagonal_y,circle_x,circle_y) <= radius or distance(hexagonal_x,hexagonal_y,circle_x,circle_y) == radius:
-                    hexagonal_points += 1
-                elif check_point(hexagonal_x,hexagonal_y) == 2:
-                    hexagonal_points += 1
-                else:
-                    pygame.draw.circle(screen, (173, 216, 230), (hexagonal_x, hexagonal_y), 1)
-                hexagonal_x += hexagonal_side_length
-    #hexagonal_grid()
-
-    if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
-        triangle_grid()
+    #if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
+    triangle_grid()
 
     pygame.display.update()
