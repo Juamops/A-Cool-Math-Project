@@ -192,8 +192,8 @@ while running:
                 if distance(point[0], point[1], target[0], target[1]) <= triangle_side_length + 0.1:
                     pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
                     edges += 1
-        area = (edges + 2 - triangle_points) * ((triangle_side_length**2)*((3**0.5)/4)
-        print(area)
+        #area = (edges + 2 - triangle_points) * ((triangle_side_length**2)*((3**0.5)/4)
+        #print(area)
 
     if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
         triangle_grid()
