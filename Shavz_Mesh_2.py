@@ -46,12 +46,17 @@ def check_point(point_x, point_y):
     if square_y <= point_y <= (square_y + side_length):
         check += 1
     return check
-point_coordinate = []
+
 def triangle_grid_points():
-    x = 0
-    y = 115
-    triangle_points = 0
-    #point_coordinate = []
+    point_coordinate = []
+    for x in range(screensize[0]/triangle_side_length):
+        for y in range(screensize[1]/round(((triangle_side_length/2)*(3**0.5)))):
+            if y % 2 == 0:
+                point_coordinate.append((x*side_length, y*(((triangle_side_length/2)*(3**0.5)))))
+            elif y % 2 != 0:
+                point_coordinate.append(((x * side_length)+side_length, y*(((triangle_side_length/2)*(3**0.5)))))
+    return point_coordinate
+"""
     while y <= 600:
         while x <= 800:
             pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
@@ -90,11 +95,11 @@ def triangle_grid_points():
             else:
                 pygame.draw.circle(screen, (173, 216, 230), (x, y), 1)
             x += triangle_side_length
-
+"""
 def triangle_grid_edges():
     edges = 0
-    for point in point_coordinate:
-        for target in point_coordinate:
+    for point in triangle_grid_points():
+        for target in triangle_grid_points():
             if distance(point[0], point[1], target[0], target[1]) <= triangle_side_length + 1:
                 pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
                 edges += 1
@@ -195,5 +200,6 @@ while running:
 
     if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
         triangle_grid_edges()
+    #print(triangle_grid_points())
 
     pygame.display.update()
