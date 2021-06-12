@@ -23,7 +23,7 @@ side_length = 200
 center_square_x = square_x + side_length / 2
 center_square_y = square_y + side_length / 2
 # Triangle and hexagon side length
-triangle_side_length = 50
+triangle_side_length = 70
 # Button for area
 circle_2_x = 60
 circle_2_y = 60
@@ -46,7 +46,6 @@ def check_point(point_x, point_y):
     if square_y <= point_y <= (square_y + side_length):
         check += 1
     return check
-
 
 while running:
 
@@ -192,11 +191,19 @@ while running:
                 if distance(point[0], point[1], target[0], target[1]) <= triangle_side_length + 0.1:
                     pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
                     edges += 1
-        #area = (edges + 2 - triangle_points) * ((triangle_side_length**2)*((3**0.5)/4)
-        #print(area)
+        faces = 0
+        for point in point_coordinate:
+            for target in point_coordinate:
+                for second_target in point_coordinate:
+                    if (point[1] + target[1] + second_target[1])/3 != point[1]:
+                        if triangle_side_length == round(distance(point[0], point[1], target[0], target[1])) == round(distance(target[0], target[1], second_target[0], second_target[1])) == round(distance(point[0], point[1], second_target[0], second_target[1])):
+                            faces += 1
 
-    if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
-        triangle_grid()
+        area = (faces/6) * ((triangle_side_length**2)*((3**0.5)/4))
+        print(faces/6)
+
+    #if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
+    triangle_grid()
 
 
     pygame.display.update()
