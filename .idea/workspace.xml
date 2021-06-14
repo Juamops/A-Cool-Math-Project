@@ -28,7 +28,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
   </component>
-  <component name="RunManager" selected="Python.Shavz_Mesh">
+  <component name="RunManager" selected="Python.Shavz_Mesh_2">
     <configuration name="JPProject" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="A-Cool-Math-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -94,8 +94,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Shavz_Mesh" />
         <item itemvalue="Python.Shavz_Mesh_2" />
+        <item itemvalue="Python.Shavz_Mesh" />
         <item itemvalue="Python.JPProject" />
       </list>
     </recent_temporary>

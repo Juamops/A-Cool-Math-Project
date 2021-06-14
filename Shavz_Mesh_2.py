@@ -32,12 +32,12 @@ radius_2 = 30
 running = True
 
 
-def distance(x1, y1, x2, y2):
-    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+def distance(point_one, point_two):
+    return ((point_one[0] - point_two[0]) ** 2 + (point_one[1] - point_two[1]) ** 2) ** 0.5
 
 
-def within(mx, my, x, y, width, height):
-    return (mx >= x and mx <= x + width and my >= y and my <= y + height)
+def within(point, square, sides):
+    return square[0] <= point[0] <= square[0] + sides and square[1] <= point[1] <= square[1] + sides
 
 def check_point(point_x, point_y):
     check = 0
@@ -47,59 +47,67 @@ def check_point(point_x, point_y):
         check += 1
     return check
 
-def check_boundaries(circle_x,circle_y,square_x,square_y):
-    return_tuple = []
-    if circle_x - radius <= square_x:
-        return_tuple.append(circle_x - radius)
-        return_tuple.append(square_x + side_length)
-    elif circle_x - radius >= square_x:
-        return_tuple.append(square_x)
-        return_tuple.append(circle_x + radius)
-    if circle_y - radius <= square_y:
-        return_tuple.append(circle_y - radius)
-        return_tuple.append(square_y + side_length)
-    elif circle_y - radius >= square_y:
-        return_tuple.append(square_y)
-        return_tuple.append(circle_y + radius)
-    return return_tuple
+def find_inside(circle, radius, square, sides, centers, indexes):
+    inside = []
+    inside_indexes = []
+    for i in range(len(centers)):
+        if distance(centers[i], circle) <= radius or within(centers[i], square, sides):
+            inside.append(centers[i])
+            inside_indexes.append(indexes[i])
+    return (inside, inside_indexes)
 
-"""
+def plot_vertices(centers, triangle_side_length, indexes):
+    # Plots vertices clockwise starting at 12 o'clock
+    points = []
+    half_height = ((triangle_side_length*(3**0.5)))/4
+    for o in range(len(centers)):
+        vertices = []
+        for i in range(3):
+
+            if indexes[o] % 2 == 0:
+                degrees = (i * 120) - 90
+            else:
+                degrees = (i * 120) + 90
+
+            vertices.append((((centers[i][0]) + (half_height * math.cos(math.radians(degrees)))),
+                            ((centers[i][1]) + (half_height * math.sin(math.radians(degrees))))))
+        points.append(vertices)
+
+    return points
+
+def get_lines(points):
+    lines = []
+    for hexagon in points:
+        hex_lines = []
+        for i in range(len(hexagon)):
+            if i <= (len(hexagon) - 2):
+                hex_lines.append((hexagon[i], hexagon[i + 1]))
+            else:
+                hex_lines.append((hexagon[i], hexagon[0]))
+
+        lines.append(hex_lines)
+
+    return lines
+
+
 def triangle_grid():
-    x = 0
-    y = 115
     point_coordinate = []
-    while y <= 600:
-        while x <= 800:
-            if distance(x,y,circle_x,circle_y) <= radius or distance(x,y,circle_x,circle_y) == radius:
-                point_coordinate.append((x, y))
-            elif check_point(x,y) == 2:
-                point_coordinate.append((x, y))
-            x += triangle_side_length
-        x = 0 + (triangle_side_length / 2)
-        y += round((triangle_side_length/2)*(3**0.5))
-        while x <= 800:
-            if distance(x,y,circle_x,circle_y) <= radius or distance(x,y,circle_x,circle_y) == radius:
-                point_coordinate.append((x, y))
-            elif check_point(x, y) == 2:
-                point_coordinate.append((x, y))
-            x += triangle_side_length
-        x = 0
-        y += round((triangle_side_length/2)*(3**0.5))
-        while x <= 800:
-            if distance(x,y,circle_x,circle_y) <= radius or distance(x,y,circle_x,circle_y) == radius:
-                point_coordinate.append((x, y))
-            elif check_point(x,y) == 2:
-                point_coordinate.append((x, y))
-            x += triangle_side_length
+    for x in range(round(screensize[0] / triangle_side_length)):
+        for y in range(round(screensize[1]/((triangle_side_length/2)*(3**0.5)))):
+            point_coordinate.append((round(x*triangle_side_length), round(y*((triangle_side_length/2)*(3**0.5)))))
 
-    for points in point_coordinate:
-        pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
+    inside_points = find_inside((circle_x, circle_y), radius, (square_x, square_y), side_length, point_coordinate,
+                range(len(point_coordinate)))
 
-    for point in point_coordinate:
-        for target in point_coordinate:
-            if distance(point[0], point[1], target[0], target[1]) <= triangle_side_length + 0.1:
-                pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
+    print(point_coordinate)
+    vertices = plot_vertices(point_coordinate, triangle_side_length, range(len(point_coordinate)))
+    #print(vertices)
+    #triangle_lines = get_lines(vertices)
 
+    for triangle in vertices:
+        for vertex in triangle:
+            pygame.draw.circle(screen, (255, 255, 255), vertex, 1)
+    """
     faces = 0
     for point in point_coordinate:
         for target in point_coordinate:
@@ -109,10 +117,11 @@ def triangle_grid():
                             distance(target[0], target[1], second_target[0], second_target[1])) == round(
                             distance(point[0], point[1], second_target[0], second_target[1])):
                         faces += 1
-
-    area = (faces / 6) * ((triangle_side_length ** 2) * ((3 ** 0.5) / 4))
+    """
+    #area = (faces / 6) * ((triangle_side_length ** 2) * ((3 ** 0.5) / 4))
     #print(faces/6)
-"""
+
+triangle_grid()
 
 while running:
 
@@ -139,23 +148,23 @@ while running:
                 right_clicking = False
 
     # Circle movement and Sizing
-    if clicking and distance(mx, my, circle_x, circle_y) <= radius:
+    if clicking and distance((mx, my), (circle_x, circle_y)) <= radius:
         if mx >= radius and my >= radius and mx <= screensize[0] - radius and my <= screensize[1] - radius:
             circle_x = mx
             circle_y = my
 
     # Square movement
-    if clicking and distance(mx, my, center_square_x, center_square_y) <= radius:
+    if clicking and distance((mx, my), (center_square_x, center_square_y)) <= radius:
         if mx >= side_length / 2 and my >= side_length / 2 and mx <= screensize[0] - side_length / 2 and my <= \
                 screensize[1] - side_length / 2:
             center_square_x = mx
             center_square_y = my
 
-    if right_clicking and distance(mx, my, circle_x, circle_y) <= radius:
-        radius = round(distance(mx, my, circle_x, circle_y)) + 2
+    if right_clicking and distance((mx, my), (circle_x, circle_y)) <= radius:
+        radius = round(distance((mx, my), (circle_x, circle_y))) + 2
 
     # Square movement and Sizing
-    if clicking and within(mx, my, square_x, square_y, side_length, side_length):
+    if clicking and within((mx, my), (square_x, square_y), side_length):
         if mx >= side_length / 2 and my >= side_length / 2 and mx <= screensize[0] - side_length / 2 and my <= \
                 screensize[1] - side_length / 2:
             square_x = round(mx - (side_length / 2))
@@ -207,50 +216,6 @@ while running:
         square_y = 0
 
     pygame.draw.rect(screen, (0, 0, 100),(center_square_x - side_length / 2, center_square_y - side_length / 2, side_length, side_length))
-
-    """
-    def triangle_grid():
-        boundaries = check_boundaries(circle_x, circle_y, square_x, square_y)
-        x = boundaries[0]
-        y = boundaries[2]
-        point_coordinate = []
-        while y <= boundaries[3]:
-            while x <= boundaries[1]+10:
-                if distance(x, y, circle_x, circle_y) <= radius + 10:# or distance(x, y, circle_x, circle_y) == radius:
-                    point_coordinate.append((x, y))
-                elif check_point(x, y) == 2:
-                    point_coordinate.append((x, y))
-                x += triangle_side_length
-            x = 0 + (triangle_side_length / 2)
-            y += round((triangle_side_length / 2) * (3 ** 0.5))
-            while x <= boundaries[1]+10:
-                if distance(x, y, circle_x, circle_y) <= radius + 10:# or distance(x, y, circle_x, circle_y) == radius:
-                    point_coordinate.append((x, y))
-                elif check_point(x, y) == 2:
-                    point_coordinate.append((x, y))
-                x += triangle_side_length
-            x = 0
-            y += round((triangle_side_length / 2) * (3 ** 0.5))
-
-        for points in point_coordinate:
-            pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
-
-        for point in point_coordinate:
-            for target in point_coordinate:
-                if round(distance(point[0], point[1], target[0], target[1])) == triangle_side_length:
-                    pygame.draw.line(screen, (255, 255, 255), (point[0], point[1]), (target[0], target[1]), 1)
-
-        faces = 0
-        for point in point_coordinate:
-            for target in point_coordinate:
-                for second_target in point_coordinate:
-                    if (point[1] + target[1] + second_target[1]) / 3 != point[1]:
-                        if triangle_side_length == round(distance(point[0], point[1], target[0], target[1])) == round(distance(target[0], target[1], second_target[0], second_target[1])) == round(distance(point[0], point[1], second_target[0], second_target[1])):
-                            faces += 1
-
-        area = (faces / 6) * ((triangle_side_length ** 2) * ((3 ** 0.5) / 4))
-        # print(faces/6)
-
     """
     def triangle_grid():
         x = 0
@@ -273,10 +238,7 @@ while running:
                 x += triangle_side_length
             x = 0
             y += round((triangle_side_length/2)*(3**0.5))
-
-        for points in point_coordinate:
-            pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
-
+            
         for point in point_coordinate:
             for target in point_coordinate:
                 if round(distance(point[0], point[1], target[0], target[1])) == triangle_side_length:
@@ -292,8 +254,8 @@ while running:
 
         area = (faces/6) * ((triangle_side_length**2)*((3**0.5)/4))
         #print(faces/6)
+    """
+    #if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
 
-    if clicking and distance(mx, my, circle_2_x, circle_2_y) <= radius:
-        triangle_grid()
 
     pygame.display.update()
