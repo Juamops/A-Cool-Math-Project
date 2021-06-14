@@ -163,10 +163,10 @@ while running:
                 x += triangle_side_length
             x = 0
             y += round((triangle_side_length / 2) * (3 ** 0.5))
-
-        for points in point_coordinate:
-            pygame.draw.circle(screen, (255, 255, 255), (x, y), 1)
-
+        """
+        for point in point_coordinate:
+            pygame.draw.circle(screen, (255, 255, 255), (point[0], point[1]), 1)
+        """
         for point in point_coordinate:
             for target in point_coordinate:
                 if round(distance(point[0], point[1], target[0], target[1])) == triangle_side_length:
