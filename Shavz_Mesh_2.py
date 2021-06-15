@@ -23,7 +23,7 @@ side_length = 200
 center_square_x = square_x + side_length / 2
 center_square_y = square_y + side_length / 2
 # Triangle and hexagon side length
-triangle_side_length = 2
+triangle_side_length = 5
 # Button for area
 circle_2_x = 60
 circle_2_y = 60
@@ -38,16 +38,6 @@ def distance(point_one, point_two):
 
 def within(point, square, sides):
     return square[0] <= point[0] <= square[0] + sides and square[1] <= point[1] <= square[1] + sides
-
-
-def check_point(point_x, point_y):
-    check = 0
-    if square_x - 10 <= point_x <= (square_x + side_length + 10):
-        check += 1
-    if square_y - 10 <= point_y <= (square_y + side_length + 10):
-        check += 1
-    return check
-
 
 def find_inside(circle, radius, square, sides, centers):
     inside = []
@@ -70,7 +60,6 @@ def plot_vertices(centers, triangle_side_length):
                 degrees = (i * 120) - 90
             vertices.append((round(((centers[o][0]) + (radius * math.cos(math.radians(degrees))))), round((centers[o][1]) + (radius * math.sin(math.radians(degrees))))))
         points.append(vertices)
-
     return points
 
 
@@ -83,11 +72,16 @@ def get_lines(points):
                 hex_lines.append((hexagon[i], hexagon[i + 1]))
             else:
                 hex_lines.append((hexagon[i], hexagon[0]))
-
         lines.append(hex_lines)
-
     return lines
 
+def general_area():
+    point_coordinate = []
+    for y in range(screensize[1]):
+        for x in range(screensize[0]):
+            point_coordinate.append((x,y))
+    print(len(find_inside((circle_x, circle_y), radius, (square_x, square_y), side_length, point_coordinate)))
+general_area()
 
 def triangle_grid():
     point_coordinate = []
