@@ -70,37 +70,29 @@ while running:
                 right_clicking = False
 
     # Circle movement and Sizing
-    if clicking and distance(mx, my, circle_x, circle_y) <= radius:
-        if radius <= mx <= screensize[0] - radius and radius <= my <= screensize[1] - radius:
-            circle_x = mx
-            circle_y = my
+    if clicking and not within(mx, my, square_x, square_y, side_length, side_length):
+        if clicking and distance(mx, my, circle_x, circle_y) <= radius:
+            if radius <= mx <= screensize[0] - radius and radius <= my <= screensize[1] - radius:
+                circle_x = mx
+                circle_y = my
 
     if right_clicking and distance(mx, my, circle_x, circle_y) <= radius:
         radius = round(distance(mx, my, circle_x, circle_y)) + 5
 
     # Square movement and Sizing
-    if clicking and within(mx, my, square_x, square_y, side_length, side_length):
-        if side_length / 2 <= mx <= screensize[0] - side_length / 2 and side_length / 2 <= my <= screensize[1]\
-                - side_length / 2:
-            square_x = round(mx - (side_length / 2))
-            square_y = round(my - (side_length / 2))
+    if clicking and distance(mx, my, circle_x, circle_y) >= radius:
+        if clicking and within(mx, my, square_x, square_y, side_length, side_length):
+            if side_length / 2 <= mx <= screensize[0] - side_length / 2 and side_length / 2 <= my <= screensize[1]\
+                    - side_length / 2:
+                square_x = round(mx - (side_length / 2))
+                square_y = round(my - (side_length / 2))
 
-    """
-    Will Hopefully Work Soon!
-    if right_clicking and within(mx, my, square_x, square_y, side_length, side_length):
-        side_length = starting_size - (click_loc[1] - my)
-    """
 
     # Drawing
 
     pygame.draw.circle(screen, (0, 0, 100), (circle_x, circle_y), radius)
     pygame.draw.rect(screen, (0, 0, 100), (square_x, square_y, side_length, side_length))
 
-    """
-    for vertices in hex_points:
-        for point in vertices:
-            pygame.draw.circle(screen, (255, 255, 255), point, 1)
-    """
     inside = hex.find_inside(
         circle=(circle_x, circle_y),
         radius=radius,

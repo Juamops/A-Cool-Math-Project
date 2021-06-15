@@ -23,7 +23,7 @@ side_length = 200
 center_square_x = square_x + side_length / 2
 center_square_y = square_y + side_length / 2
 # Triangle and hexagon side length
-triangle_side_length = 5
+triangle_side_length = 10
 # Button for area
 circle_2_x = 60
 circle_2_y = 60
@@ -177,10 +177,10 @@ while running:
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_UP:
             side_length += 1
-            square_y -= 0.5
+            square_y -= 0.05
         if event.key == pygame.K_DOWN:
             side_length -= 1
-            square_y += 0.5
+            square_y += 0.05
         if event.key == pygame.K_F3:
             side_length += 0.05
         if event.key == pygame.K_F4:

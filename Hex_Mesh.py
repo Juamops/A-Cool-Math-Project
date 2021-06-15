@@ -20,7 +20,6 @@ def plot_centers(radius, screensize):
             elif y % 2 == 1:
                 centers.append(((x * 2 * (radius * math.cos(math.radians(30)))),
                                 radius + (y * (radius + (radius * math.sin(math.radians(30)))))))
-
     return centers
 
 
@@ -51,7 +50,6 @@ def get_lines(points):
         lines.append(hex_lines)
 
     return lines
-
 
 def find_inside(circle, radius, square, sides, centers):
     inside = []
