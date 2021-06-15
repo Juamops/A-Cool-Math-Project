@@ -23,7 +23,7 @@ side_length = 200
 center_square_x = square_x + side_length / 2
 center_square_y = square_y + side_length / 2
 # Triangle and hexagon side length
-triangle_side_length = 25
+triangle_side_length = 2
 # Button for area
 circle_2_x = 60
 circle_2_y = 60
@@ -63,15 +63,12 @@ def plot_vertices(centers, triangle_side_length):
     radius = ((triangle_side_length*(3**0.5)))/3
     for o in range(len(centers)):
         vertices = []
-        #print(indexes[o])
         for i in range(3):
-            if o % 2 == 0:
-                degrees = (i * 120) - 90
-            else:
+            if centers[o][1] <= centers[o-1][1]:
                 degrees = (i * 120) + 90
-
-            vertices.append((round(((centers[o][0]) + (radius * math.cos(math.radians(degrees))))),
-                            round((centers[o][1]) + (radius * math.sin(math.radians(degrees))))))
+            else:
+                degrees = (i * 120) - 90
+            vertices.append((round(((centers[o][0]) + (radius * math.cos(math.radians(degrees))))), round((centers[o][1]) + (radius * math.sin(math.radians(degrees))))))
         points.append(vertices)
 
     return points
@@ -102,32 +99,15 @@ def triangle_grid():
                 point_coordinate.append((round(x * (triangle_side_length/2)), round((y * ((triangle_side_length) * (3 ** 0.5)) / 2))))
 
     inside_points = find_inside((circle_x, circle_y), radius, (square_x, square_y), side_length, point_coordinate)
-
-    print(inside_points)
     vertices = plot_vertices(inside_points, triangle_side_length)
-    #print(vertices)
     triangle_lines = get_lines(vertices)
-
-    print(vertices)
 
     for triangle in triangle_lines:
         for vertex in triangle:
             pygame.draw.line(screen, (255, 255, 255), vertex[0], vertex[1], 1)
-    """
-    faces = 0
-    for point in point_coordinate:
-        for target in point_coordinate:
-            for second_target in point_coordinate:
-                if (point[1] + target[1] + second_target[1]) / 3 != point[1]:
-                    if triangle_side_length == round(distance(point[0], point[1], target[0], target[1])) == round(
-                            distance(target[0], target[1], second_target[0], second_target[1])) == round(
-                            distance(point[0], point[1], second_target[0], second_target[1])):
-                        faces += 1
-    """
-    #area = (faces / 6) * ((triangle_side_length ** 2) * ((3 ** 0.5) / 4))
-    #print(faces/6)
 
-
+    area = len(inside_points) * ((triangle_side_length ** 2) * ((3 ** 0.5) / 4))
+    print(area)
 
 while running:
 
